@@ -26,15 +26,15 @@ A single-file portfolio website (`index.html`) ready to deploy on GitHub Pages.
 
 ## Adding your photo
 
-The hero expects a file called `photo.jpg` in the **same folder as `index.html`** (the repo root).
+The hero expects a file at `assets/photo.jpg` — create an `assets/` folder next to `index.html` and put the photo inside it.
 
-1. Pick a square photo of yourself — ideally at least 720×720 px, good lighting, shoulders visible.
-2. Rename it to `photo.jpg` and drop it into the repo root.
-3. Commit and push. The circular crop happens automatically via CSS.
+1. Pick a portrait photo — ideally at least 720×900 px (4:5 ratio works best), good lighting, professional framing.
+2. Name it `photo.jpg` and place it at `assets/photo.jpg`.
+3. Commit and push. The photo is displayed as a clean rectangle with a subtle desaturation effect that restores to full color on hover.
 
-If your file is `.png` or `.webp`, either rename it or change the `src="photo.jpg"` attribute in the `<img class="portrait">` tag inside `index.html`.
+If your file is `.png` or `.webp`, either rename it or change the `src="assets/photo.jpg"` attribute in the `<img class="portrait">` tag inside `index.html`.
 
-Tip: to keep the repo small, export the photo at around 800×800 px at 80–85% JPEG quality — that's plenty for a circular avatar and keeps the file under ~100 KB.
+Tip: export the photo at around 800×1000 px at 80–85% JPEG quality — plenty for the portrait display and keeps the file under ~150 KB.
 
 ## What to customize
 

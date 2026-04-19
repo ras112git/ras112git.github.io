@@ -1,0 +1,92 @@
+# ============================================================
+# Project-specific
+# ============================================================
+
+# Claude / AI assistant context files — kept local, never committed
+CLAUDE.md
+.claude/
+.cursor/
+.aider*
+
+# Local notes and drafts
+NOTES.md
+TODO.md
+*.draft.*
+
+# ============================================================
+# Operating system
+# ============================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================================
+# Editors & IDEs
+# ============================================================
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim / Emacs
+*.swp
+*.swo
+*~
+\#*\#
+.\#*
+
+# ============================================================
+# Logs & temporary files
+# ============================================================
+
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# ============================================================
+# Image source / working files (keep exports, not sources)
+# ============================================================
+
+*.psd
+*.ai
+*.sketch
+*.fig
+*.xcf
+
+# Original unoptimized photo (if you keep it alongside the export)
+assets/photo.original.*
+assets/*.raw
