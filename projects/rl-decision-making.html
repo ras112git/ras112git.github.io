@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Optimizing operation decision-making through Reinforcement Learning — Raul Calvino Sobrido</title>
+<meta name="description" content="Project detail — reinforcement learning algorithm for web-shop decision making based on routing and warehousing status." />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f7f7f4;
+    --ink: #0d1b2a;
+    --ink-2: #2d3a4b;
+    --muted: #6b7280;
+    --line: #e4e4df;
+    --accent: #8a6d3b;
+    --sans: 'Inter Tight', system-ui, -apple-system, sans-serif;
+    --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.65;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- Containers ---------- */
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+  .container-narrow {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ---------- Nav (identical to index.html) ---------- */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid transparent;
+    transition: border-color .25s ease;
+  }
+  nav.scrolled { border-bottom-color: var(--line); }
+  .nav-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .nav-links a {
+    color: var(--ink-2);
+    transition: color .2s ease;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  @media (max-width: 720px) {
+    .nav-links { display: none; }
+  }
+
+  /* ---------- Page layout ---------- */
+  main {
+    padding-top: 120px;
+    padding-bottom: 100px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    margin-bottom: 48px;
+    transition: color .2s ease;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  /* ---------- Header ---------- */
+  .project-header {
+    margin-bottom: 48px;
+  }
+  .eyebrow-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .status-pill::before {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #3f9d5a; /* green — default "In production" */
+  }
+  .status-pill.completed::before { background: var(--accent); }
+  .status-pill.ongoing::before   { background: #c89234; }
+  .status-pill.archived::before  { background: var(--muted); }
+
+  .project-title {
+    font-family: var(--serif);
+    font-size: clamp(34px, 4.2vw, 52px);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .project-lede {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink-2);
+    max-width: 680px;
+  }
+
+  /* ---------- Image ---------- */
+  .project-image-wrap {
+    margin: 48px 0 56px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+  .project-image-wrap img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(25%) contrast(1.02);
+  }
+
+  /* ---------- Summary table ---------- */
+  .summary-table {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--line);
+    margin-bottom: 56px;
+  }
+  .summary-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 32px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .summary-label {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+  }
+  .summary-value {
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .summary-sub {
+    display: block;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    margin-top: 2px;
+  }
+  @media (max-width: 680px) {
+    .summary-row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+
+  /* ---------- Highlights ---------- */
+  .highlights {
+    margin-bottom: 56px;
+  }
+  .highlights-label {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 600;
+    margin-bottom: 22px;
+  }
+  .highlights ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+  .highlights li {
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--ink-2);
+    line-height: 1.6;
+    padding: 16px 0 16px 34px;
+    position: relative;
+    border-bottom: 1px dotted var(--line);
+  }
+  .highlights li:last-child { border-bottom: none; }
+  .highlights li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 28px;
+    width: 20px;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  /* ---------- Tags (reused) ---------- */
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 48px;
+  }
+  .tag {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    color: var(--ink-2);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------- Repo button ---------- */
+  .repo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    background: var(--accent);
+    color: #ffffff;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: background .2s ease;
+  }
+  .repo-btn:hover { background: #a88551; }
+  .repo-btn svg { width: 16px; height: 16px; }
+
+  /* ---------- Next project ---------- */
+  .next-project {
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    padding: 64px 0;
+  }
+  .next-label {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .next-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    font-family: var(--serif);
+    font-size: clamp(26px, 3vw, 36px);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    transition: color .25s ease;
+  }
+  .next-link .next-arrow {
+    display: inline-block;
+    transition: transform .25s ease, color .25s ease;
+    color: var(--muted);
+  }
+  .next-link:hover { color: var(--accent); }
+  .next-link:hover .next-arrow {
+    color: var(--accent);
+    transform: translateX(6px);
+  }
+
+  /* ---------- Footer (identical to index.html) ---------- */
+  footer {
+    background: var(--ink);
+    color: #6b7a8a;
+    padding: 36px 0;
+    font-size: 13px;
+    border-top: 1px solid #1a2838;
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  @media (max-width: 500px) {
+    main { padding-top: 100px; }
+    .project-image-wrap { margin: 36px 0 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== NAV ============== -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">Raul Calvino Sobrido</a>
+    <div class="nav-links">
+      <a href="../index.html#about">About</a>
+      <a href="../index.html#experience">Experience</a>
+      <a href="../index.html#education">Education</a>
+      <a href="../index.html#skills">Expertise</a>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============== MAIN ============== -->
+<main>
+  <div class="container-narrow">
+
+    <a href="../index.html#projects" class="back-link">← Back to projects</a>
+
+    <header class="project-header">
+      <div class="eyebrow-row">
+        <span class="eyebrow">Project 01 — Reinforcement Learning</span>
+        <span class="status-pill completed">Completed</span>
+      </div>
+      <h1 class="project-title">Optimizing operation decision-making through Reinforcement Learning.</h1>
+      <p class="project-lede">
+        Designed a reinforcement learning algorithm that learned optimal
+        web-shop decision making based on routing and warehousing status.
+      </p>
+    </header>
+
+    <div class="project-image-wrap">
+      <img src="../assets/projects/rl-decision-making.jpg"
+           alt="Optimizing operation decision-making through Reinforcement Learning"
+           onerror="this.style.display='none'" />
+    </div>
+
+    <div class="summary-table">
+      <div class="summary-row">
+        <div class="summary-label">Role</div>
+        <div class="summary-value">Operations and Warehouse Intern</div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-label">Organisation</div>
+        <div class="summary-value">
+          Flaschenpost
+          <span class="summary-sub">Münster · Germany · Company project</span>
+        </div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-label">Timeline</div>
+        <div class="summary-value">2024</div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-label">Stack</div>
+        <div class="summary-value">Python, Julia, Git &amp; GitHub</div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-label">Domain</div>
+        <div class="summary-value">Reinforcement learning · Operations decision-making</div>
+      </div>
+    </div>
+
+    <section class="highlights">
+      <div class="highlights-label">Key highlights</div>
+      <ul>
+        <li>
+          Formulated the web-shop decision problem as a reinforcement learning
+          task, with the agent taking decisions based in the current routing and 
+          warehousing state.
+        </li>
+        <li>
+          Built the learning environment and training loop in mainly in Python and 
+          Julia.
+        </li>
+        <li>
+          Experimented with different learning agent configurations, decision-making policies, and
+          case scenarios. It was studied the diferent agent configurations, to extract conclusions and 
+          recommendations to the company.
+        </li>
+      </ul>
+    </section>
+
+    <div class="project-tags">
+      <span class="tag">Reinforcement Learning</span>
+      <span class="tag">Python</span>
+      <span class="tag">Julia</span>
+      <span class="tag">GitHub</span>
+    </div>
+
+  </div>
+</main>
+
+<!-- ============== NEXT PROJECT ============== -->
+<section class="next-project">
+  <div class="container">
+    <span class="next-label">More projects</span>
+    <a href="../index.html#projects" class="next-link">
+      <span>See all projects.</span>
+      <span class="next-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer>
+  <div class="container footer-inner">
+    <div>© 2026 Raul Calvino Sobrido. All rights reserved.</div>
+    <div>Hosted on GitHub Pages.</div>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  });
+</script>
+
+</body>
+</html>
