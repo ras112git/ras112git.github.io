@@ -180,14 +180,11 @@
     margin: 48px 0 56px;
     background: var(--surface);
     border: 1px solid var(--line);
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
   }
   .project-image-wrap img {
     display: block;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
     filter: grayscale(25%) contrast(1.02);
   }
 
@@ -403,9 +400,8 @@
     </header>
 
     <div class="project-image-wrap">
-      <img src="../assets/projects/rl-decision-making.jpg"
-           alt="Optimizing operation decision-making through Reinforcement Learning"
-           onerror="this.style.display='none'" />
+      <img src="../assets/rl-decision-making.png"
+           alt="Optimizing operation decision-making through Reinforcement Learning" />
     </div>
 
     <div class="summary-table">
