@@ -266,6 +266,44 @@
     font-weight: 500;
     padding-top: 6px;
   }
+  .project-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .project-date {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 3px 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-2);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .status-pill::before {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #3f9d5a; /* green — default "In production" */
+  }
+  .status-pill.completed::before { background: var(--accent); }
+  .status-pill.ongoing::before   { background: #3f9d5a; }
+  .status-pill.archived::before  { background: var(--muted); }
   .project-body h3 {
     font-family: var(--serif);
     font-size: 22px;
@@ -724,6 +762,8 @@
           <li>Microsoft 365 <span class="skill-level">Advanced</span></li>
           <li>FlexSim <span class="skill-level">Intermediate</span></li>
           <li>Tableau <span class="skill-level">Intermediate</span></li>
+          <li>Siemens Plant Simulation <span class="skill-level">Basic</span></li>
+          <li>GAMS <span class="skill-level">Intermediate</span></li>
           <li>LogHub <span class="skill-level">Basic</span></li>
         </ul>
       </div>
@@ -734,7 +774,7 @@
           <li>Spanish <span class="skill-level">Native</span></li>
           <li>Galician / Portuguese <span class="skill-level">Native</span></li>
           <li>English <span class="skill-level">Bilingual</span></li>
-          <li>German <span class="skill-level">Professional proficiency - B2</span></li>
+          <li>German <span class="skill-level">C1</span></li>
         </ul>
       </div>
 
@@ -755,6 +795,10 @@
       <a href="projects/rl-decision-making.html" class="project">
         <div class="project-num">01</div>
         <div class="project-body">
+          <div class="project-meta">
+            <span class="project-date">2024</span>
+            <span class="status-pill completed">Completed</span>
+          </div>
           <h3>Optimizing operation decision-making through Reinforcement Learning</h3>
           <p>
             Designed a reinforcement learning algorithm that learned optimal
@@ -773,6 +817,10 @@
       <a href="projects/cvrp-scip.html" class="project">
         <div class="project-num">02</div>
         <div class="project-body">
+          <div class="project-meta">
+            <span class="project-date">2025</span>
+            <span class="status-pill completed">Completed</span>
+          </div>
           <h3>Solving the Capacitated Vehicle Routing Problem in C++ with SCIP</h3>
           <p>
             Built a Capacitated Vehicle Routing Problem solver in C++,
@@ -792,6 +840,10 @@
       <a href="projects/hospital-staffing.html" class="project">
         <div class="project-num">03</div>
         <div class="project-body">
+          <div class="project-meta">
+            <span class="project-date">2023</span>
+            <span class="status-pill completed">Completed</span>
+          </div>
           <h3>Modeling clinic waiting times and staffing with stochastic dynamic programming</h3>
           <p>
             Modeled patient waiting times and optimal clinic staffing to
@@ -804,6 +856,31 @@
             <span class="tag">Stochastic DP</span>
             <span class="tag">Plant Simulation</span>
             <span class="tag">Excel</span>
+          </div>
+        </div>
+        <div class="project-arrow">→</div>
+      </a>
+
+      <a href="projects/dresden-tram-network.html" class="project">
+        <div class="project-num">04</div>
+        <div class="project-body">
+          <div class="project-meta">
+            <span class="project-date">2026</span>
+            <span class="status-pill ongoing">Ongoing</span>
+          </div>
+          <h3>Line network planning for the Dresden tram system</h3>
+          <p>
+            Developing a sample line network plan for the Dresden tram system,
+            built around a potential new line connecting the TU Dresden campus
+            with the city centre. The problem is formulated as a mixed-integer
+            program and solved with CPLEX to minimise construction and operating
+            costs across a range of demand and capacity scenarios.
+          </p>
+          <div class="project-tags">
+            <span class="tag">Line network design</span>
+            <span class="tag">MIP</span>
+            <span class="tag">GAMS</span>
+            <span class="tag">CPLEX</span>
           </div>
         </div>
         <div class="project-arrow">→</div>
